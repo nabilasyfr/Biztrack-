@@ -74,7 +74,10 @@ class ReportController extends Controller
 
         // By day chart data
         $dailyRevenue = [];
-        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $mon, $year);
+        
+        // REVISI: Mengganti cal_days_in_month dengan date('t') agar lancar di server Railway
+        $daysInMonth = (int) date('t', mktime(0, 0, 0, (int)$mon, 1, (int)$year));
+        
         for ($d = 1; $d <= $daysInMonth; $d++) {
             $dateStr = sprintf('%04d-%02d-%02d', $year, $mon, $d);
             $dailyRevenue[$d] = $sales->filter(fn($s) => $s->created_at->format('Y-m-d') === $dateStr)->sum('total_amount');
