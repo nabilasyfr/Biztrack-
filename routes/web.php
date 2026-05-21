@@ -52,4 +52,19 @@ Route::middleware(['auth.biztrack'])->group(function () {
         Route::get('/reports/inventory',  [ReportController::class, 'inventory'])->name('reports.inventory');
         Route::get('/reports/financial',  [ReportController::class, 'financial'])->name('reports.financial');
     });
+    
+});
+
+// TARUH DI SINI (Di luar area login/middleware)
+Route::get('/init-migrate', function () {
+    try {
+        // Menggunakan nama class lengkap agar tidak eror di server
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--force' => true,
+            '--seed' => true
+        ]);
+        return "🔥 Suksesss! Database ERP Berhasil Dimigrasi dan Diisi Data Awal!";
+    } catch (\Exception $e) {
+        return "Aduh Eror: " . $e->getMessage();
+    }
 });
