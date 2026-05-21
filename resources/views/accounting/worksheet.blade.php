@@ -111,19 +111,6 @@
 @php
 /*
  * ─── Aggregate totals untuk footer & net income ──────────────────────────
- *
- * Catatan AIS:
- *   totNsDr / totNsCr   = jumlah kolom NS (saldo bersih, bukan mentah)
- *   totAdjDr / totAdjCr = jumlah kolom Penyesuaian (mentah per baris ADJ)
- *   totNsdDr / totNsdCr = jumlah kolom NS Disesuaikan (saldo bersih)
- *   totLrDr / totLrCr   = jumlah kolom L/R (sebelum net income row)
- *   totNerDr / totNerCr = jumlah kolom Neraca (sebelum net income row)
- *
- * Net income = totLrCr - totLrDr
- *   • Laba (>0): +totLrDr baris net income → menyeimbangkan kolom L/R
- *                +totNerCr baris net income → masuk ekuitas di Neraca
- *   • Rugi (<0): +totLrCr baris net income
- *                +totNerDr baris net income
  */
 $totNsDr  = $rows->sum('nsDr');
 $totNsCr  = $rows->sum('nsCr');
@@ -131,10 +118,12 @@ $totAdjDr = $rows->sum('adjDr');
 $totAdjCr = $rows->sum('adjCr');
 $totNsdDr = $rows->sum('nsdDr');
 $totNsdCr = $rows->sum('nsdCr');
-$totLrDr  = $rows->sum('lrDr');
-$totLrCr  = $rows->sum('lrCr');
-$totNerDr = $rows->sum('nerDr');
-$totNerCr = $rows->sum('nerCr');
+
+// REVISI LOGIKA FILTER TOTAL: Supaya kalkulasi total bawah sinkron dengan baris tabel yang di-filter
+$totLrDr  = $rows->filter(fn($r) => !in_array(substr($r->acc->code, 0, 1), ['1', '2', '3']))->sum('lrDr');
+$totLrCr  = $rows->filter(fn($r) => !in_array(substr($r->acc->code, 0, 1), ['1', '2', '3']))->sum('lrCr');
+$totNerDr = $rows->filter(fn($r) => in_array(substr($r->acc->code, 0, 1), ['1', '2', '3']))->sum('nerDr');
+$totNerCr = $rows->filter(fn($r) => in_array(substr($r->acc->code, 0, 1), ['1', '2', '3']))->sum('nerCr');
 
 // Net income (positif = laba, negatif = rugi)
 $netIncome = $totLrCr - $totLrDr;
@@ -192,17 +181,22 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
                     </tr>
                     {{-- Row 2: D/K sub-headers --}}
                     <tr>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
                     </tr>
                 </thead>
 
                 {{-- ── BODY ─────────────────────────────────────────────────── --}}
                 <tbody>
                     @forelse($rows as $r)
+                    @php
+                        // Ambil digit pertama dari kode akun untuk membedakan kategori (1=Aset, 2=Utang, 3=Modal, 4=Pendapatan, 5=Beban)
+                        $accountFirstDigit = substr($r->acc->code, 0, 1);
+                        $isRealAccount = in_array($accountFirstDigit, ['1', '2', '3']);
+                    @endphp
                     <tr>
                         {{-- Nama akun --}}
                         <td class="ps-3">
@@ -223,13 +217,21 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
                         <td class="num-cell {{ $r->nsdDr > 0 ? 'text-dr' : '' }}">{{ $fmt($r->nsdDr) }}</td>
                         <td class="num-cell {{ $r->nsdCr > 0 ? 'text-cr' : '' }}">{{ $fmt($r->nsdCr) }}</td>
 
-                        {{-- Laba / Rugi (hanya revenue & expense) --}}
-                        <td class="num-cell {{ $r->lrDr > 0 ? 'text-dr' : '' }}">{{ $fmt($r->lrDr) }}</td>
-                        <td class="num-cell {{ $r->lrCr > 0 ? 'text-cr' : '' }}">{{ $fmt($r->lrCr) }}</td>
+                        {{-- REVISI: Laba / Rugi (Hanya muncul jika BUKAN akun Riil kepala 1,2,3) --}}
+                        <td class="num-cell {{ (!$isRealAccount && $r->lrDr > 0) ? 'text-dr' : '' }}">
+                            {{ $isRealAccount ? '-' : $fmt($r->lrDr) }}
+                        </td>
+                        <td class="num-cell {{ (!$isRealAccount && $r->lrCr > 0) ? 'text-cr' : '' }}">
+                            {{ $isRealAccount ? '-' : $fmt($r->lrCr) }}
+                        </td>
 
-                        {{-- Neraca (hanya asset, liability, equity) --}}
-                        <td class="num-cell {{ $r->nerDr > 0 ? 'text-dr' : '' }}">{{ $fmt($r->nerDr) }}</td>
-                        <td class="num-cell {{ $r->nerCr > 0 ? 'text-cr' : '' }}">{{ $fmt($r->nerCr) }}</td>
+                        {{-- REVISI: Neraca (Hanya muncul jika merupakan akun Riil kepala 1,2,3) --}}
+                        <td class="num-cell {{ ($isRealAccount && $r->nerDr > 0) ? 'text-dr' : '' }}">
+                            {{ $isRealAccount ? $fmt($r->nerDr) : '-' }}
+                        </td>
+                        <td class="num-cell {{ ($isRealAccount && $r->nerCr > 0) ? 'text-cr' : '' }}">
+                            {{ $isRealAccount ? $fmt($r->nerCr) : '-' }}
+                        </td>
                     </tr>
                     @empty
                     <tr>
@@ -237,15 +239,7 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
                     </tr>
                     @endforelse
 
-                    {{-- ── Net Income / Rugi Baris Penyeimbang ────────────────
-                         AIS Standard:
-                         • Laba (netIncome > 0):
-                             L/R  → Debit  kolom (menyeimbangkan total L/R)
-                             Neraca → Kredit kolom (menambah ekuitas)
-                         • Rugi (netIncome < 0):
-                             L/R  → Kredit kolom
-                             Neraca → Debit  kolom
-                    ──────────────────────────────────────────────────────── --}}
+                    {{-- ── Net Income / Rugi Baris Penyeimbang ──────────────── --}}
                     @if($netIncome != 0)
                     <tr class="{{ $netIncome > 0 ? 'row-net-income' : 'row-net-loss' }}">
                         <td class="ps-3 fw-bold {{ $netIncome > 0 ? 'text-success' : 'text-danger' }}">
@@ -272,10 +266,6 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
                             {{-- Laba masuk Kredit Neraca (menambah ekuitas) --}}
                             <td class="num-cell">-</td>
                             <td class="num-cell fw-bold text-cr">{{ $fmtAbs($netIncome) }}</td>
-                        @else
-                            {{-- Rugi masuk Debit Neraca (mengurangi ekuitas) --}}
-                            <td class="num-cell fw-bold text-dr">{{ $fmtAbs($netIncome) }}</td>
-                            <td class="num-cell">-</td>
                         @endif
                     </tr>
                     @endif
@@ -306,21 +296,7 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
         </div>{{-- /table-responsive --}}
     </div>{{-- /card-body --}}
 
-    {{-- ── Keterangan / Legend ──────────────────────────────────── --}}
-    <div class="card-footer text-muted small no-print">
-        <div class="row g-2">
-            <div class="col-md-6">
-                <strong>Catatan AIS:</strong>
-                Kolom Neraca Saldo & NS Disesuaikan menampilkan <em>saldo bersih</em> (normal balance),
-                bukan akumulasi debit/kredit mentah.
-                Setiap akun hanya terisi pada <em>satu</em> kolom (Debit atau Kredit).
-            </div>
-            <div class="col-md-6">
-                <strong>Baris Laba/Rugi Bersih:</strong>
-                Selisih kolom L/R dimasukkan sebagai baris penyeimbang:
-                Laba → Debit L/R &amp; Kredit Neraca;
-                Rugi → Kredit L/R &amp; Debit Neraca.
-            </div>
+
         </div>
     </div>
 </div>

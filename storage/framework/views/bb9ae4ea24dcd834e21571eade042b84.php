@@ -110,19 +110,6 @@
 <?php
 /*
  * ─── Aggregate totals untuk footer & net income ──────────────────────────
- *
- * Catatan AIS:
- *   totNsDr / totNsCr   = jumlah kolom NS (saldo bersih, bukan mentah)
- *   totAdjDr / totAdjCr = jumlah kolom Penyesuaian (mentah per baris ADJ)
- *   totNsdDr / totNsdCr = jumlah kolom NS Disesuaikan (saldo bersih)
- *   totLrDr / totLrCr   = jumlah kolom L/R (sebelum net income row)
- *   totNerDr / totNerCr = jumlah kolom Neraca (sebelum net income row)
- *
- * Net income = totLrCr - totLrDr
- *   • Laba (>0): +totLrDr baris net income → menyeimbangkan kolom L/R
- *                +totNerCr baris net income → masuk ekuitas di Neraca
- *   • Rugi (<0): +totLrCr baris net income
- *                +totNerDr baris net income
  */
 $totNsDr  = $rows->sum('nsDr');
 $totNsCr  = $rows->sum('nsCr');
@@ -130,10 +117,12 @@ $totAdjDr = $rows->sum('adjDr');
 $totAdjCr = $rows->sum('adjCr');
 $totNsdDr = $rows->sum('nsdDr');
 $totNsdCr = $rows->sum('nsdCr');
-$totLrDr  = $rows->sum('lrDr');
-$totLrCr  = $rows->sum('lrCr');
-$totNerDr = $rows->sum('nerDr');
-$totNerCr = $rows->sum('nerCr');
+
+// REVISI LOGIKA FILTER TOTAL: Supaya kalkulasi total bawah sinkron dengan baris tabel yang di-filter
+$totLrDr  = $rows->filter(fn($r) => !in_array(substr($r->acc->code, 0, 1), ['1', '2', '3']))->sum('lrDr');
+$totLrCr  = $rows->filter(fn($r) => !in_array(substr($r->acc->code, 0, 1), ['1', '2', '3']))->sum('lrCr');
+$totNerDr = $rows->filter(fn($r) => in_array(substr($r->acc->code, 0, 1), ['1', '2', '3']))->sum('nerDr');
+$totNerCr = $rows->filter(fn($r) => in_array(substr($r->acc->code, 0, 1), ['1', '2', '3']))->sum('nerCr');
 
 // Net income (positif = laba, negatif = rugi)
 $netIncome = $totLrCr - $totLrDr;
@@ -195,17 +184,22 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
                     </tr>
                     
                     <tr>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
-                        <th class="num-cell">Debit</th>  <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
+                        <th class="num-cell">Debit</th> <th class="num-cell">Kredit</th>
                     </tr>
                 </thead>
 
                 
                 <tbody>
                     <?php $__empty_1 = true; $__currentLoopData = $rows; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <?php
+                        // Ambil digit pertama dari kode akun untuk membedakan kategori (1=Aset, 2=Utang, 3=Modal, 4=Pendapatan, 5=Beban)
+                        $accountFirstDigit = substr($r->acc->code, 0, 1);
+                        $isRealAccount = in_array($accountFirstDigit, ['1', '2', '3']);
+                    ?>
                     <tr>
                         
                         <td class="ps-3">
@@ -227,12 +221,24 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
                         <td class="num-cell <?php echo e($r->nsdCr > 0 ? 'text-cr' : ''); ?>"><?php echo e($fmt($r->nsdCr)); ?></td>
 
                         
-                        <td class="num-cell <?php echo e($r->lrDr > 0 ? 'text-dr' : ''); ?>"><?php echo e($fmt($r->lrDr)); ?></td>
-                        <td class="num-cell <?php echo e($r->lrCr > 0 ? 'text-cr' : ''); ?>"><?php echo e($fmt($r->lrCr)); ?></td>
+                        <td class="num-cell <?php echo e((!$isRealAccount && $r->lrDr > 0) ? 'text-dr' : ''); ?>">
+                            <?php echo e($isRealAccount ? '-' : $fmt($r->lrDr)); ?>
+
+                        </td>
+                        <td class="num-cell <?php echo e((!$isRealAccount && $r->lrCr > 0) ? 'text-cr' : ''); ?>">
+                            <?php echo e($isRealAccount ? '-' : $fmt($r->lrCr)); ?>
+
+                        </td>
 
                         
-                        <td class="num-cell <?php echo e($r->nerDr > 0 ? 'text-dr' : ''); ?>"><?php echo e($fmt($r->nerDr)); ?></td>
-                        <td class="num-cell <?php echo e($r->nerCr > 0 ? 'text-cr' : ''); ?>"><?php echo e($fmt($r->nerCr)); ?></td>
+                        <td class="num-cell <?php echo e(($isRealAccount && $r->nerDr > 0) ? 'text-dr' : ''); ?>">
+                            <?php echo e($isRealAccount ? $fmt($r->nerDr) : '-'); ?>
+
+                        </td>
+                        <td class="num-cell <?php echo e(($isRealAccount && $r->nerCr > 0) ? 'text-cr' : ''); ?>">
+                            <?php echo e($isRealAccount ? $fmt($r->nerCr) : '-'); ?>
+
+                        </td>
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
@@ -267,10 +273,6 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
                             
                             <td class="num-cell">-</td>
                             <td class="num-cell fw-bold text-cr"><?php echo e($fmtAbs($netIncome)); ?></td>
-                        <?php else: ?>
-                            
-                            <td class="num-cell fw-bold text-dr"><?php echo e($fmtAbs($netIncome)); ?></td>
-                            <td class="num-cell">-</td>
                         <?php endif; ?>
                     </tr>
                     <?php endif; ?>
@@ -301,24 +303,9 @@ $nerBalanced = abs($grandNerDr - $grandNerCr) < 0.01;
         </div>
     </div>
 
-    
-    <div class="card-footer text-muted small no-print">
-        <div class="row g-2">
-            <div class="col-md-6">
-                <strong>Catatan AIS:</strong>
-                Kolom Neraca Saldo & NS Disesuaikan menampilkan <em>saldo bersih</em> (normal balance),
-                bukan akumulasi debit/kredit mentah.
-                Setiap akun hanya terisi pada <em>satu</em> kolom (Debit atau Kredit).
-            </div>
-            <div class="col-md-6">
-                <strong>Baris Laba/Rugi Bersih:</strong>
-                Selisih kolom L/R dimasukkan sebagai baris penyeimbang:
-                Laba → Debit L/R &amp; Kredit Neraca;
-                Rugi → Kredit L/R &amp; Debit Neraca.
-            </div>
+
         </div>
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\biztrack\resources\views/accounting/worksheet.blade.php ENDPATH**/ ?>
