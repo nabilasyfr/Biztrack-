@@ -369,6 +369,15 @@
         <a href="<?php echo e(route('accounting.balance-sheet')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.balance-sheet') ? 'active' : ''); ?>">
             <i class="bi bi-bank2"></i> Balance Sheet
         </a>
+
+                <div class="nav-section-label">Laporan Bisnis</div>
+        <a href="<?php echo e(route('reports.sales')); ?>" class="nav-link <?php echo e(request()->routeIs('reports.sales') ? 'active' : ''); ?>">
+            <i class="bi bi-bar-chart-line"></i> Laporan Penjualan
+        </a>
+                <a href="<?php echo e(route('reports.inventory')); ?>" class="nav-link <?php echo e(request()->routeIs('reports.inventory') ? 'active' : ''); ?>">
+            <i class="bi bi-clipboard-data"></i> Laporan Inventori
+        </a>
+
         <?php endif; ?>
     </div>
 
