@@ -35,7 +35,6 @@ $typeLabels = [
                             <th class="ps-4" style="width:120px">Kode</th>
                             <th>Nama Akun</th>
                             <th>Keterangan</th>
-                            <th class="text-end pe-4">Saldo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +43,7 @@ $typeLabels = [
                             <td class="ps-4"><code class="fw-bold"><?php echo e($acc->code); ?></code></td>
                             <td class="fw-semibold"><?php echo e($acc->name); ?></td>
                             <td class="text-muted" style="font-size:12px"><?php echo e($acc->description); ?></td>
-                            <td class="text-end pe-4 fw-bold">Rp<?php echo e(number_format($acc->getBalance(),0,',','.')); ?></td>
+                            <
                         </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>

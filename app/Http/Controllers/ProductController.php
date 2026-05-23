@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Product, InventoryLog};
+use App\Models\{Product, InventoryLog, SaleItem};
 
 class ProductController extends Controller
 {
@@ -24,7 +24,14 @@ class ProductController extends Controller
         $products = $query->orderBy('name')->paginate(15)->withQueryString();
         $categories = Product::distinct()->pluck('category')->filter()->sort()->values();
 
-        return view('products.index', compact('products', 'categories'));
+        // Attach total sold qty per product
+        $productIds = $products->pluck('id');
+        $soldQtyMap = SaleItem::whereIn('product_id', $productIds)
+            ->selectRaw('product_id, SUM(quantity) as total_sold')
+            ->groupBy('product_id')
+            ->pluck('total_sold', 'product_id');
+
+        return view('products.index', compact('products', 'categories', 'soldQtyMap'));
     }
 
     public function create()
@@ -98,7 +105,11 @@ class ProductController extends Controller
             ]);
         }
 
-        return redirect()->route('products.index')->with('success', "Produk {$product->name} berhasil diperbarui.");
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'message' => "Produk {$product->name} berhasil diperbarui."]);
+        }
+
+        return redirect()->route('products.show', $product)->with('success', "Produk {$product->name} berhasil diperbarui.");
     }
 
     public function destroy(Product $product)
@@ -110,8 +121,20 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        // Inventory logs (20 most recent)
         $logs = $product->inventoryLogs()->orderBy('created_at', 'desc')->limit(20)->get();
-        return view('products.show', compact('product', 'logs'));
+
+        // Sale transactions for this product
+        $saleTransactions = SaleItem::with('sale')
+            ->where('product_id', $product->id)
+            ->orderByDesc('created_at')
+            ->limit(20)
+            ->get();
+
+        // Total qty sold
+        $totalSold = SaleItem::where('product_id', $product->id)->sum('quantity');
+
+        return view('products.show', compact('product', 'logs', 'saleTransactions', 'totalSold'));
     }
 
     public function inventoryLog(Request $request)

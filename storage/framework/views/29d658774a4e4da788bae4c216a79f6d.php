@@ -1,12 +1,12 @@
 
-<?php $__env->startSection('title','Input Modal & Jurnal Manual'); ?>
-<?php $__env->startSection('page-title','Input Modal & Jurnal Manual'); ?>
+<?php $__env->startSection('title','Input Jurnal Manual'); ?>
+<?php $__env->startSection('page-title','Input Jurnal Manual'); ?>
 
 <?php $__env->startSection('content'); ?>
 <div class="page-header">
     <div>
-        <h1>Input Modal & Jurnal Manual</h1>
-        <p>Catat modal awal, penyesuaian, atau transaksi akuntansi yang perlu diinput manual</p>
+        <h1>Input Jurnal Manual</h1>
+        <p>Catat Penyesuaian, atau transaksi akuntansi yang perlu diinput manual</p>
     </div>
     <a href="<?php echo e(route('accounting.journal')); ?>" class="btn btn-outline-secondary">
         <i class="bi bi-journal-text me-1"></i> Lihat Jurnal
@@ -14,31 +14,6 @@
 </div>
 
 
-<div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="stat-card">
-            <div class="stat-icon" style="background:#f0fdf4;color:#16a34a"><i class="bi bi-bank"></i></div>
-            <div>
-                <div class="stat-label">Total Modal Pemilik (3100)</div>
-                <div class="stat-value" style="font-size:18px; color:#16a34a">
-                    Rp<?php echo e(number_format($totalModal, 0, ',', '.')); ?>
-
-                </div>
-                <div class="stat-sub">Saldo akun Modal Pemilik</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="alert alert-info mb-0" style="border-radius:12px; font-size:13.5px; height:100%; display:flex; align-items:center; gap:12px;">
-            <i class="bi bi-lightbulb-fill fs-4"></i>
-            <div>
-                <strong>Cara Input Modal Awal:</strong><br>
-                Pilih <strong>Debit → Kas (1100)</strong> dan <strong>Kredit → Modal Pemilik (3100)</strong>.<br>
-                Ini mencerminkan bahwa uang masuk ke kas berasal dari modal pemilik toko.
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="row g-3">
     
@@ -243,91 +218,7 @@ unset($__errorArgs, $__bag); ?>
             </div>
         </div>
     </div>
-
-    
-    <div class="col-lg-5">
-        <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-book me-2"></i>Panduan: Kombinasi Umum</div>
-            <div class="card-body p-0">
-                <div class="list-group list-group-flush">
-                    
-                    <div class="list-group-item px-3 py-3" style="cursor:pointer"
-                         onclick="fillTemplate('Modal Awal Toko', 1100, 3100)">
-                        <div class="fw-bold mb-1" style="font-size:13px">
-                            💰 Modal Awal / Setoran Modal
-                        </div>
-                        <div style="font-size:12px; color:#64748b">
-                            <span class="badge bg-primary">Debit</span> Kas (1100)
-                            &nbsp;←&nbsp;
-                            <span class="badge bg-success">Kredit</span> Modal Pemilik (3100)
-                        </div>
-                        <div class="text-muted mt-1" style="font-size:11px">
-                            Klik untuk isi otomatis →
-                        </div>
-                    </div>
-
-                    
-                    <div class="list-group-item px-3 py-3" style="cursor:pointer"
-                         onclick="fillTemplate('Setoran Modal ke Dana Wallet', 1110, 3100)">
-                        <div class="fw-bold mb-1" style="font-size:13px">
-                            💙 Modal Masuk ke Dana Wallet
-                        </div>
-                        <div style="font-size:12px; color:#64748b">
-                            <span class="badge bg-primary">Debit</span> Dana Wallet (1110)
-                            &nbsp;←&nbsp;
-                            <span class="badge bg-success">Kredit</span> Modal Pemilik (3100)
-                        </div>
-                        <div class="text-muted mt-1" style="font-size:11px">Klik untuk isi otomatis →</div>
-                    </div>
-
-                    
-                    <div class="list-group-item px-3 py-3" style="cursor:pointer"
-                         onclick="fillTemplate('Setoran Modal ke Rekening Bank', 1120, 3100)">
-                        <div class="fw-bold mb-1" style="font-size:13px">
-                            🏦 Modal Masuk ke Rekening Bank
-                        </div>
-                        <div style="font-size:12px; color:#64748b">
-                            <span class="badge bg-primary">Debit</span> Rekening Bank (1120)
-                            &nbsp;←&nbsp;
-                            <span class="badge bg-success">Kredit</span> Modal Pemilik (3100)
-                        </div>
-                        <div class="text-muted mt-1" style="font-size:11px">Klik untuk isi otomatis →</div>
-                    </div>
-
-                    
-                    <div class="list-group-item px-3 py-3" style="cursor:pointer"
-                         onclick="fillTemplate('Pembelian Stok Barang Awal', 1200, 1100)">
-                        <div class="fw-bold mb-1" style="font-size:13px">
-                            📦 Pembelian Stok Barang (Tunai)
-                        </div>
-                        <div style="font-size:12px; color:#64748b">
-                            <span class="badge bg-primary">Debit</span> Persediaan (1200)
-                            &nbsp;←&nbsp;
-                            <span class="badge bg-success">Kredit</span> Kas (1100)
-                        </div>
-                        <div class="text-muted mt-1" style="font-size:11px">Klik untuk isi otomatis →</div>
-                    </div>
-
-                    
-                    <div class="list-group-item px-3 py-3" style="cursor:pointer"
-                         onclick="fillTemplate('Penyesuaian Saldo Kas', 1100, 3100)">
-                        <div class="fw-bold mb-1" style="font-size:13px">
-                            🔧 Koreksi / Penyesuaian Saldo
-                        </div>
-                        <div style="font-size:12px; color:#64748b">
-                            Bebas pilih akun debit & kredit sesuai kebutuhan
-                        </div>
-                        <div class="text-muted mt-1" style="font-size:11px">Klik untuk isi otomatis →</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="alert alert-warning" style="border-radius:12px; font-size:13px">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            <strong>Perhatian:</strong> Jurnal manual langsung mempengaruhi saldo Buku Besar.
-            Pastikan akun Debit dan Kredit sudah benar sebelum menyimpan.
-        </div>
+  
     </div>
 </div>
 <?php $__env->stopSection(); ?>

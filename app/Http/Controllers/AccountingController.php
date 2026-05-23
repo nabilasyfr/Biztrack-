@@ -50,18 +50,32 @@ class AccountingController extends Controller
     }
 
     // ─── Jurnal Umum ──────────────────────────────
-    public function journal(Request $request)
-    {
-        $query = JournalEntry::with(['lines.account'])
-            ->orderBy('entry_date','desc')->orderBy('id','desc');
-        if ($request->filled('date_from')) $query->where('entry_date','>=',$request->date_from);
-        if ($request->filled('date_to'))   $query->where('entry_date','<=',$request->date_to);
-        if ($request->filled('search'))    $query->where('reference','like',"%{$request->search}%")
-                                                  ->orWhere('description','like',"%{$request->search}%");
-        $entries = $query->paginate(20)->withQueryString();
-        return view('accounting.journal', compact('entries'));
+public function journal(Request $request)
+{
+    $query = JournalEntry::with(['lines.account'])
+        ->where('reference', 'like', 'JRN-%')
+        ->orderBy('entry_date', 'desc')
+        ->orderBy('id', 'desc');
+
+    if ($request->filled('date_from')) {
+        $query->where('entry_date', '>=', $request->date_from);
     }
 
+    if ($request->filled('date_to')) {
+        $query->where('entry_date', '<=', $request->date_to);
+    }
+
+    if ($request->filled('search')) {
+        $query->where(function ($q) use ($request) {
+            $q->where('reference', 'like', "%{$request->search}%")
+              ->orWhere('description', 'like', "%{$request->search}%");
+        });
+    }
+
+    $entries = $query->paginate(20)->withQueryString();
+
+    return view('accounting.journal', compact('entries'));
+}
     // ─── Buku Besar ───────────────────────────────
     public function ledger(Request $request)
     {

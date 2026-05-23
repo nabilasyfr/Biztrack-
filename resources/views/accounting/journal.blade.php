@@ -6,88 +6,198 @@
 <div class="page-header">
     <div>
         <h1>Jurnal Umum</h1>
-        <p>Semua entri jurnal akuntansi yang dibuat otomatis</p>
+        <p>
+            Pencatatan transaksi non-operasional dan jurnal manual
+            yang tidak berasal dari transaksi penjualan maupun pembelian.
+        </p>
     </div>
-    <a href="{{ route('accounting.coa') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-list-columns-reverse me-1"></i> Bagan Akun
-    </a>
+
+    <div class="d-flex gap-2">
+        <a href="{{ route('accounting.modal') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            Add Journal Entry
+        </a>
+
+        <a href="{{ route('accounting.coa') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-list-columns-reverse me-1"></i>
+            Bagan Akun
+        </a>
+    </div>
 </div>
 
+{{-- FILTER --}}
 <div class="card mb-3">
     <div class="card-body py-3">
         <form method="GET" class="row g-2 align-items-end">
+
             <div class="col-md-3">
                 <label class="form-label mb-1">Dari Tanggal</label>
-                <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
+                <input type="date"
+                       name="date_from"
+                       class="form-control"
+                       value="{{ request('date_from') }}">
             </div>
+
             <div class="col-md-3">
                 <label class="form-label mb-1">Sampai Tanggal</label>
-                <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
+                <input type="date"
+                       name="date_to"
+                       class="form-control"
+                       value="{{ request('date_to') }}">
             </div>
+
             <div class="col-md-3">
                 <label class="form-label mb-1">Cari Referensi</label>
-                <input type="text" name="search" class="form-control" placeholder="No. invoice..." value="{{ request('search') }}">
+                <input type="text"
+                       name="search"
+                       class="form-control"
+                       placeholder="JRN-..."
+                       value="{{ request('search') }}">
             </div>
+
             <div class="col-md-2">
-                <button class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Filter</button>
+                <button class="btn btn-primary w-100">
+                    <i class="bi bi-search me-1"></i>
+                    Filter
+                </button>
             </div>
+
         </form>
     </div>
 </div>
 
+{{-- LIST --}}
 <div class="card">
-    <div class="card-header"><i class="bi bi-journal-text me-2"></i>Entri Jurnal ({{ $entries->total() }})</div>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <i class="bi bi-journal-text me-2"></i>
+            Entri Jurnal ({{ $entries->total() }})
+        </div>
+
+        <small class="text-muted">
+            General Journal Entries (JRN)
+        </small>
+    </div>
+
     <div class="card-body p-0">
+
         @forelse($entries as $entry)
+
         <div class="border-bottom p-3 px-4">
+
             <div class="d-flex justify-content-between align-items-start mb-2">
+
                 <div>
-                    <span class="fw-bold text-primary me-2">{{ $entry->reference }}</span>
-                    <span class="text-muted" style="font-size:12px">{{ \Carbon\Carbon::parse($entry->entry_date)->format('d F Y') }}</span>
+                    <span class="fw-bold text-primary me-2">
+                        {{ $entry->reference }}
+                    </span>
+
+                    <span class="badge bg-primary">
+                        Manual Journal
+                    </span>
+
+                    <div class="text-muted mt-1"
+                         style="font-size:12px">
+                        {{ \Carbon\Carbon::parse($entry->entry_date)->format('d F Y') }}
+                    </div>
                 </div>
-                <span class="text-muted" style="font-size:11px">#{{ $entry->id }}</span>
+
+                <span class="text-muted"
+                      style="font-size:11px">
+                    #{{ $entry->id }}
+                </span>
+
             </div>
-            <p class="text-muted mb-2" style="font-size:13px">{{ $entry->description }}</p>
-            <table class="table table-sm mb-0" style="font-size:13px">
+
+            <p class="text-muted mb-2"
+               style="font-size:13px">
+                {{ $entry->description }}
+            </p>
+
+            <table class="table table-sm mb-0"
+                   style="font-size:13px">
+
                 <thead>
                     <tr class="table-light">
                         <th style="width:100px">Kode</th>
                         <th>Nama Akun</th>
-                        <th class="text-end" style="width:150px">Debit</th>
-                        <th class="text-end" style="width:150px">Kredit</th>
+                        <th class="text-end"
+                            style="width:150px">
+                            Debit
+                        </th>
+                        <th class="text-end"
+                            style="width:150px">
+                            Kredit
+                        </th>
                     </tr>
                 </thead>
+
                 <tbody>
+
                     @foreach($entry->lines as $line)
                     <tr>
-                        <td><code style="font-size:11px">{{ $line->account->code ?? '-' }}</code></td>
-                        <td>{{ $line->account->name ?? '-' }}</td>
+
+                        <td>
+                            <code style="font-size:11px">
+                                {{ $line->account->code ?? '-' }}
+                            </code>
+                        </td>
+
+                        <td>
+                            {{ $line->account->name ?? '-' }}
+                        </td>
+
                         <td class="text-end {{ $line->debit > 0 ? 'fw-bold text-primary' : 'text-muted' }}">
-                            {{ $line->debit > 0 ? 'Rp'.number_format($line->debit,0,',','.') : '-' }}
+                            {{ $line->debit > 0
+                                ? 'Rp'.number_format($line->debit,0,',','.')
+                                : '-' }}
                         </td>
+
                         <td class="text-end {{ $line->credit > 0 ? 'fw-bold text-success' : 'text-muted' }}">
-                            {{ $line->credit > 0 ? 'Rp'.number_format($line->credit,0,',','.') : '-' }}
+                            {{ $line->credit > 0
+                                ? 'Rp'.number_format($line->credit,0,',','.')
+                                : '-' }}
                         </td>
+
                     </tr>
                     @endforeach
+
                     <tr class="table-light fw-bold">
-                        <td colspan="2" class="text-end">Total</td>
-                        <td class="text-end text-primary">Rp{{ number_format($entry->lines->sum('debit'),0,',','.') }}</td>
-                        <td class="text-end text-success">Rp{{ number_format($entry->lines->sum('credit'),0,',','.') }}</td>
+                        <td colspan="2"
+                            class="text-end">
+                            Total
+                        </td>
+
+                        <td class="text-end text-primary">
+                            Rp{{ number_format($entry->lines->sum('debit'),0,',','.') }}
+                        </td>
+
+                        <td class="text-end text-success">
+                            Rp{{ number_format($entry->lines->sum('credit'),0,',','.') }}
+                        </td>
                     </tr>
+
                 </tbody>
             </table>
         </div>
+
         @empty
+
         <div class="text-center text-muted py-5">
-            <i class="bi bi-journal-x" style="font-size:36px; display:block; margin-bottom:8px;"></i>
+            <i class="bi bi-journal-x"
+               style="font-size:36px; display:block; margin-bottom:8px;"></i>
+
             Belum ada entri jurnal
         </div>
+
         @endforelse
 
         @if($entries->hasPages())
-        <div class="d-flex justify-content-center py-3">{{ $entries->links() }}</div>
+        <div class="d-flex justify-content-center py-3">
+            {{ $entries->links() }}
+        </div>
         @endif
+
     </div>
 </div>
 @endsection

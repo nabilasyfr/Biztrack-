@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title','Kasir / POS')
-@section('page-title','Kasir / Point of Sale')
+@section('title','Sales')
+@section('page-title','Sales')
 
 @push('styles')
 <style>

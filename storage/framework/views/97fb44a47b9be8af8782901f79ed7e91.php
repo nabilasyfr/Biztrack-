@@ -332,7 +332,7 @@
 
         <div class="nav-section-label">Penjualan</div>
         <a href="<?php echo e(route('pos.index')); ?>" class="nav-link <?php echo e(request()->routeIs('pos.*') ? 'active' : ''); ?>">
-            <i class="bi bi-upc-scan"></i> Kasir / POS
+            <i class="bi bi-upc-scan"></i> Sales
         </a>
         <a href="<?php echo e(route('sales.index')); ?>" class="nav-link <?php echo e(request()->routeIs('sales.*') ? 'active' : ''); ?>">
             <i class="bi bi-receipt"></i> Riwayat Penjualan
@@ -342,54 +342,32 @@
         <a href="<?php echo e(route('products.index')); ?>" class="nav-link <?php echo e(request()->routeIs('products.*') ? 'active' : ''); ?>">
             <i class="bi bi-box-seam"></i> Produk
         </a>
-        <a href="<?php echo e(route('inventory.log')); ?>" class="nav-link <?php echo e(request()->routeIs('inventory.*') ? 'active' : ''); ?>">
-            <i class="bi bi-arrow-left-right"></i> Log Inventori
-        </a>
 
         <?php if(session('biztrack_role') === 'owner'): ?>
         <div class="nav-section-label">Keuangan</div>
         <a href="<?php echo e(route('accounting.coa')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.coa') ? 'active' : ''); ?>">
-            <i class="bi bi-list-columns-reverse"></i> Bagan Akun (CoA)
+            <i class="bi bi-list-columns-reverse"></i>  (CoA)
         </a>
         <a href="<?php echo e(route('accounting.journal')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.journal') ? 'active' : ''); ?>">
-            <i class="bi bi-journal-text"></i> Jurnal Umum
+            <i class="bi bi-journal-text"></i> General Journal
         </a>
         <a href="<?php echo e(route('accounting.ledger')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.ledger') ? 'active' : ''); ?>">
-            <i class="bi bi-book"></i> Buku Besar
+            <i class="bi bi-book"></i> General Ledger
         </a>
-        <a href="<?php echo e(route('accounting.modal')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.modal*') ? 'active' : ''); ?>">
-            <i class="bi bi-pencil-square"></i> Input Modal / Jurnal
-        </a>
-        <a href="<?php echo e(route('accounting.adjusting')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.adjusting') ? 'active' : ''); ?>">
-            <i class="bi bi-wrench"></i> Jurnal Penyesuaian
-        </a>
-        <a href="<?php echo e(route('expenses.index')); ?>" class="nav-link <?php echo e(request()->routeIs('expenses.*') ? 'active' : ''); ?>">
-            <i class="bi bi-wallet2"></i> Pengeluaran
-        </a>
+
 
         <div class="nav-section-label">Laporan</div>
         <a href="<?php echo e(route('accounting.trial-balance')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.trial-balance') ? 'active' : ''); ?>">
-            <i class="bi bi-table"></i> Neraca Saldo
-        </a>
+            <i class="bi bi-table"></i> Trial Balance
+            </a>
         <a href="<?php echo e(route('accounting.worksheet')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.worksheet') ? 'active' : ''); ?>">
-            <i class="bi bi-grid-3x3-gap"></i> Kertas Kerja
+            <i class="bi bi-grid-3x3-gap"></i> Worksheet
         </a>
         <a href="<?php echo e(route('accounting.income-statement')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.income-statement') ? 'active' : ''); ?>">
-            <i class="bi bi-file-earmark-bar-graph"></i> Laporan Laba Rugi
+            <i class="bi bi-file-earmark-bar-graph"></i> Income Statement
         </a>
         <a href="<?php echo e(route('accounting.balance-sheet')); ?>" class="nav-link <?php echo e(request()->routeIs('accounting.balance-sheet') ? 'active' : ''); ?>">
-            <i class="bi bi-bank2"></i> Neraca Keuangan
-        </a>
-
-        <div class="nav-section-label">Laporan Bisnis</div>
-        <a href="<?php echo e(route('reports.sales')); ?>" class="nav-link <?php echo e(request()->routeIs('reports.sales') ? 'active' : ''); ?>">
-            <i class="bi bi-bar-chart-line"></i> Laporan Penjualan
-        </a>
-        <a href="<?php echo e(route('reports.inventory')); ?>" class="nav-link <?php echo e(request()->routeIs('reports.inventory') ? 'active' : ''); ?>">
-            <i class="bi bi-clipboard-data"></i> Laporan Inventori
-        </a>
-        <a href="<?php echo e(route('reports.financial')); ?>" class="nav-link <?php echo e(request()->routeIs('reports.financial') ? 'active' : ''); ?>">
-            <i class="bi bi-graph-up-arrow"></i> Laporan Keuangan
+            <i class="bi bi-bank2"></i> Balance Sheet
         </a>
         <?php endif; ?>
     </div>

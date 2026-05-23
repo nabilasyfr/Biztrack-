@@ -8,6 +8,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\AccountingController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\CategoryController;
 
 // Auth routes
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -21,6 +22,9 @@ Route::middleware(['auth.biztrack'])->group(function () {
 
     Route::resource('products', ProductController::class);
     Route::get('/inventory/log', [ProductController::class, 'inventoryLog'])->name('inventory.log');
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories/update', [CategoryController::class, 'update'])->name('categories.update');
+    Route::post('/categories/destroy', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     Route::get('/pos', [SaleController::class, 'pos'])->name('pos.index');
     Route::post('/pos/checkout', [SaleController::class, 'checkout'])->name('pos.checkout');

@@ -332,7 +332,7 @@
 
         <div class="nav-section-label">Penjualan</div>
         <a href="{{ route('pos.index') }}" class="nav-link {{ request()->routeIs('pos.*') ? 'active' : '' }}">
-            <i class="bi bi-upc-scan"></i> Kasir / POS
+            <i class="bi bi-upc-scan"></i> Sales
         </a>
         <a href="{{ route('sales.index') }}" class="nav-link {{ request()->routeIs('sales.*') ? 'active' : '' }}">
             <i class="bi bi-receipt"></i> Riwayat Penjualan
@@ -342,54 +342,32 @@
         <a href="{{ route('products.index') }}" class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
             <i class="bi bi-box-seam"></i> Produk
         </a>
-        <a href="{{ route('inventory.log') }}" class="nav-link {{ request()->routeIs('inventory.*') ? 'active' : '' }}">
-            <i class="bi bi-arrow-left-right"></i> Log Inventori
-        </a>
 
         @if(session('biztrack_role') === 'owner')
         <div class="nav-section-label">Keuangan</div>
         <a href="{{ route('accounting.coa') }}" class="nav-link {{ request()->routeIs('accounting.coa') ? 'active' : '' }}">
-            <i class="bi bi-list-columns-reverse"></i> Bagan Akun (CoA)
+            <i class="bi bi-list-columns-reverse"></i>  (CoA)
         </a>
         <a href="{{ route('accounting.journal') }}" class="nav-link {{ request()->routeIs('accounting.journal') ? 'active' : '' }}">
-            <i class="bi bi-journal-text"></i> Jurnal Umum
+            <i class="bi bi-journal-text"></i> General Journal
         </a>
         <a href="{{ route('accounting.ledger') }}" class="nav-link {{ request()->routeIs('accounting.ledger') ? 'active' : '' }}">
-            <i class="bi bi-book"></i> Buku Besar
+            <i class="bi bi-book"></i> General Ledger
         </a>
-        <a href="{{ route('accounting.modal') }}" class="nav-link {{ request()->routeIs('accounting.modal*') ? 'active' : '' }}">
-            <i class="bi bi-pencil-square"></i> Input Modal / Jurnal
-        </a>
-        <a href="{{ route('accounting.adjusting') }}" class="nav-link {{ request()->routeIs('accounting.adjusting') ? 'active' : '' }}">
-            <i class="bi bi-wrench"></i> Jurnal Penyesuaian
-        </a>
-        <a href="{{ route('expenses.index') }}" class="nav-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}">
-            <i class="bi bi-wallet2"></i> Pengeluaran
-        </a>
+
 
         <div class="nav-section-label">Laporan</div>
         <a href="{{ route('accounting.trial-balance') }}" class="nav-link {{ request()->routeIs('accounting.trial-balance') ? 'active' : '' }}">
-            <i class="bi bi-table"></i> Neraca Saldo
-        </a>
+            <i class="bi bi-table"></i> Trial Balance
+            </a>
         <a href="{{ route('accounting.worksheet') }}" class="nav-link {{ request()->routeIs('accounting.worksheet') ? 'active' : '' }}">
-            <i class="bi bi-grid-3x3-gap"></i> Kertas Kerja
+            <i class="bi bi-grid-3x3-gap"></i> Worksheet
         </a>
         <a href="{{ route('accounting.income-statement') }}" class="nav-link {{ request()->routeIs('accounting.income-statement') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-bar-graph"></i> Laporan Laba Rugi
+            <i class="bi bi-file-earmark-bar-graph"></i> Income Statement
         </a>
         <a href="{{ route('accounting.balance-sheet') }}" class="nav-link {{ request()->routeIs('accounting.balance-sheet') ? 'active' : '' }}">
-            <i class="bi bi-bank2"></i> Neraca Keuangan
-        </a>
-
-        <div class="nav-section-label">Laporan Bisnis</div>
-        <a href="{{ route('reports.sales') }}" class="nav-link {{ request()->routeIs('reports.sales') ? 'active' : '' }}">
-            <i class="bi bi-bar-chart-line"></i> Laporan Penjualan
-        </a>
-        <a href="{{ route('reports.inventory') }}" class="nav-link {{ request()->routeIs('reports.inventory') ? 'active' : '' }}">
-            <i class="bi bi-clipboard-data"></i> Laporan Inventori
-        </a>
-        <a href="{{ route('reports.financial') }}" class="nav-link {{ request()->routeIs('reports.financial') ? 'active' : '' }}">
-            <i class="bi bi-graph-up-arrow"></i> Laporan Keuangan
+            <i class="bi bi-bank2"></i> Balance Sheet
         </a>
         @endif
     </div>

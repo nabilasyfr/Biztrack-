@@ -7,11 +7,16 @@
         <h1>Produk</h1>
         <p>Kelola semua produk dan stok barang</p>
     </div>
-    <?php if(session('biztrack_role')==='owner'): ?>
-    <a href="<?php echo e(route('products.create')); ?>" class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1"></i> Tambah Produk
-    </a>
-    <?php endif; ?>
+    <div class="d-flex gap-2">
+        <?php if(session('biztrack_role')==='owner'): ?>
+        <a href="<?php echo e(route('categories.index')); ?>" class="btn btn-outline-secondary">
+            <i class="bi bi-tags me-1"></i> Kelola Kategori
+        </a>
+        <a href="<?php echo e(route('products.create')); ?>" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Tambah Produk
+        </a>
+        <?php endif; ?>
+    </div>
 </div>
 
 
@@ -45,7 +50,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <span><i class="bi bi-box-seam me-2"></i>Daftar Produk (<?php echo e($products->total()); ?>)</span>
         <a href="<?php echo e(route('inventory.log')); ?>" class="btn btn-sm btn-outline-secondary">
-            <i class="bi bi-arrow-left-right me-1"></i>Log Inventori
+            <i class="bi bi-arrow-left-right me-1"></i>Log Inventori Global
         </a>
     </div>
     <div class="card-body p-0">
@@ -59,7 +64,8 @@
                         <th class="text-end">H. Beli</th>
                         <th class="text-end">H. Jual</th>
                         <th class="text-center">Stok</th>
-                        <th class="text-center">Min.</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Terjual</th>
                         <th class="text-center pe-4">Aksi</th>
                     </tr>
                 </thead>
@@ -75,22 +81,36 @@
                         <td class="text-end">Rp<?php echo e(number_format($p->cost_price,0,',','.')); ?></td>
                         <td class="text-end fw-semibold">Rp<?php echo e(number_format($p->selling_price,0,',','.')); ?></td>
                         <td class="text-center">
-                            <?php if($p->isLowStock()): ?>
-                                <span class="badge bg-danger"><?php echo e($p->stock); ?></span>
+                            <span class="fw-semibold <?php echo e($p->stock == 0 ? 'text-danger' : ($p->isLowStock() ? 'text-warning' : '')); ?>">
+                                <?php echo e($p->stock); ?>
+
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <?php if($p->stock == 0): ?>
+                                <span class="badge bg-danger">Out of Stock</span>
+                            <?php elseif($p->isLowStock()): ?>
+                                <span class="badge bg-warning text-dark">Low Stock</span>
                             <?php else: ?>
-                                <span class="fw-semibold"><?php echo e($p->stock); ?></span>
+                                <span class="badge bg-success">Available</span>
                             <?php endif; ?>
                         </td>
-                        <td class="text-center text-muted"><?php echo e($p->min_stock); ?></td>
+                        <td class="text-center text-muted fw-semibold">
+                            <?php echo e($soldQtyMap[$p->id] ?? 0); ?>
+
+                        </td>
                         <td class="text-center pe-4">
                             <?php if(session('biztrack_role')==='owner'): ?>
-                            <a href="<?php echo e(route('products.edit',$p)); ?>" class="btn btn-sm btn-outline-primary me-1">
+                            <a href="<?php echo e(route('products.show',$p)); ?>" class="btn btn-sm btn-outline-secondary me-1" title="Detail">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="<?php echo e(route('products.edit',$p)); ?>" class="btn btn-sm btn-outline-primary me-1" title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <form method="POST" action="<?php echo e(route('products.destroy',$p)); ?>" class="d-inline"
                                   onsubmit="return confirm('Hapus produk <?php echo e($p->name); ?>?')">
                                 <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
-                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="bi bi-trash"></i></button>
                             </form>
                             <?php else: ?>
                             <a href="<?php echo e(route('products.show',$p)); ?>" class="btn btn-sm btn-outline-secondary">
@@ -100,7 +120,7 @@
                         </td>
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                    <tr><td colspan="8" class="text-center text-muted py-5">Tidak ada produk ditemukan</td></tr>
+                    <tr><td colspan="9" class="text-center text-muted py-5">Tidak ada produk ditemukan</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -114,5 +134,4 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\biztrack\resources\views/products/index.blade.php ENDPATH**/ ?>

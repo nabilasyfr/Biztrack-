@@ -35,7 +35,6 @@ $typeLabels = [
                             <th class="ps-4" style="width:120px">Kode</th>
                             <th>Nama Akun</th>
                             <th>Keterangan</th>
-                            <th class="text-end pe-4">Saldo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +43,7 @@ $typeLabels = [
                             <td class="ps-4"><code class="fw-bold">{{ $acc->code }}</code></td>
                             <td class="fw-semibold">{{ $acc->name }}</td>
                             <td class="text-muted" style="font-size:12px">{{ $acc->description }}</td>
-                            <td class="text-end pe-4 fw-bold">Rp{{ number_format($acc->getBalance(),0,',','.') }}</td>
+                            <
                         </tr>
                         @endforeach
                     </tbody>

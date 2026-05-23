@@ -1,5 +1,5 @@
-<?php $__env->startSection('title','Kasir / POS'); ?>
-<?php $__env->startSection('page-title','Kasir / Point of Sale'); ?>
+<?php $__env->startSection('title','Sales'); ?>
+<?php $__env->startSection('page-title','Sales'); ?>
 
 <?php $__env->startPush('styles'); ?>
 <style>

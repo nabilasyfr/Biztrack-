@@ -8,11 +8,16 @@
         <h1>Produk</h1>
         <p>Kelola semua produk dan stok barang</p>
     </div>
-    @if(session('biztrack_role')==='owner')
-    <a href="{{ route('products.create') }}" class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1"></i> Tambah Produk
-    </a>
-    @endif
+    <div class="d-flex gap-2">
+        @if(session('biztrack_role')==='owner')
+        <a href="{{ route('categories.index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-tags me-1"></i> Kelola Kategori
+        </a>
+        <a href="{{ route('products.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Tambah Produk
+        </a>
+        @endif
+    </div>
 </div>
 
 {{-- Search & filter --}}
@@ -46,7 +51,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <span><i class="bi bi-box-seam me-2"></i>Daftar Produk ({{ $products->total() }})</span>
         <a href="{{ route('inventory.log') }}" class="btn btn-sm btn-outline-secondary">
-            <i class="bi bi-arrow-left-right me-1"></i>Log Inventori
+            <i class="bi bi-arrow-left-right me-1"></i>Log Inventori Global
         </a>
     </div>
     <div class="card-body p-0">
@@ -60,7 +65,8 @@
                         <th class="text-end">H. Beli</th>
                         <th class="text-end">H. Jual</th>
                         <th class="text-center">Stok</th>
-                        <th class="text-center">Min.</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Terjual</th>
                         <th class="text-center pe-4">Aksi</th>
                     </tr>
                 </thead>
@@ -76,22 +82,34 @@
                         <td class="text-end">Rp{{ number_format($p->cost_price,0,',','.') }}</td>
                         <td class="text-end fw-semibold">Rp{{ number_format($p->selling_price,0,',','.') }}</td>
                         <td class="text-center">
-                            @if($p->isLowStock())
-                                <span class="badge bg-danger">{{ $p->stock }}</span>
+                            <span class="fw-semibold {{ $p->stock == 0 ? 'text-danger' : ($p->isLowStock() ? 'text-warning' : '') }}">
+                                {{ $p->stock }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            @if($p->stock == 0)
+                                <span class="badge bg-danger">Out of Stock</span>
+                            @elseif($p->isLowStock())
+                                <span class="badge bg-warning text-dark">Low Stock</span>
                             @else
-                                <span class="fw-semibold">{{ $p->stock }}</span>
+                                <span class="badge bg-success">Available</span>
                             @endif
                         </td>
-                        <td class="text-center text-muted">{{ $p->min_stock }}</td>
+                        <td class="text-center text-muted fw-semibold">
+                            {{ $soldQtyMap[$p->id] ?? 0 }}
+                        </td>
                         <td class="text-center pe-4">
                             @if(session('biztrack_role')==='owner')
-                            <a href="{{ route('products.edit',$p) }}" class="btn btn-sm btn-outline-primary me-1">
+                            <a href="{{ route('products.show',$p) }}" class="btn btn-sm btn-outline-secondary me-1" title="Detail">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ route('products.edit',$p) }}" class="btn btn-sm btn-outline-primary me-1" title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <form method="POST" action="{{ route('products.destroy',$p) }}" class="d-inline"
                                   onsubmit="return confirm('Hapus produk {{ $p->name }}?')">
                                 @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="bi bi-trash"></i></button>
                             </form>
                             @else
                             <a href="{{ route('products.show',$p) }}" class="btn btn-sm btn-outline-secondary">
@@ -101,7 +119,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="8" class="text-center text-muted py-5">Tidak ada produk ditemukan</td></tr>
+                    <tr><td colspan="9" class="text-center text-muted py-5">Tidak ada produk ditemukan</td></tr>
                     @endforelse
                 </tbody>
             </table>
