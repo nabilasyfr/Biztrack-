@@ -115,10 +115,8 @@ Buka browser: **http://localhost:8000**
 - Produk terlaris
 
 ### 📦 Produk & Inventori
-<img width="1128" height="522" alt="image" src="https://github.com/user-attachments/assets/17fde820-8892-4989-8c27-5b549d2dfbb3" />
 <img width="1128" height="517" alt="image" src="https://github.com/user-attachments/assets/25db78f9-9b0d-4bc8-8215-98d0d2ec8064" />
 <img width="1128" height="520" alt="image" src="https://github.com/user-attachments/assets/3842252d-d8c9-4cf4-8c40-2fdb496215c9" />
-
 
 - CRUD produk lengkap
 - Kode produk unik
@@ -128,6 +126,7 @@ Buka browser: **http://localhost:8000**
 
 ### 🛒 POS / Kasir
 <img width="1128" height="515" alt="image" src="https://github.com/user-attachments/assets/4f472d24-c804-4693-863a-97004326a39a" />
+<img width="1128" height="522" alt="image" src="https://github.com/user-attachments/assets/17fde820-8892-4989-8c27-5b549d2dfbb3" />
 
 - Pilih produk dengan grid interaktif
 - Keranjang belanja real-time
