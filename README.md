@@ -4,6 +4,8 @@
 Sistem ERP mini berbasis web untuk toko kelontong / UMKM retail Indonesia.
 Dibangun dengan **Laravel 11**, **Bootstrap 5**, dan **MySQL**.
 
+https://biztrack-production-1c2f.up.railway.app
+
 ---
 
 ## 🚀 Cara Install & Menjalankan
