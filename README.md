@@ -1,10 +1,10 @@
 # 🏪 BizTrack UMKM
 **Smart Retail, Inventory & Accounting System for UMKM**
 
-Sistem ERP mini berbasis web untuk toko kelontong / UMKM retail Indonesia.
+Sistem ERP mini berbasis web untuk toko kelontong / UMKM retail Indonesia. Tujuannya mengintegrasikan pengelolaan produk, inventory, sales, expense, dan accounting dalam satu sistem, sehingga transaksi operasional dapat terhubung dengan pencatatan keuangan.
 Dibangun dengan **Laravel 11**, **Bootstrap 5**, dan **MySQL**.
 
-https://biztrack-production-1c2f.up.railway.app
+
 
 ---
 
@@ -106,6 +106,8 @@ Buka browser: **http://localhost:8000**
 ## 📋 Fitur Lengkap
 
 ### 🏠 Dashboard
+<img width="1918" height="884" alt="Screenshot 2026-05-23 184514" src="https://github.com/user-attachments/assets/3cb0cd6b-492a-462e-8571-a7c46bd9a766" />
+
 - Total penjualan hari ini
 - Omset & laba bulan ini
 - Alert stok rendah
@@ -113,6 +115,11 @@ Buka browser: **http://localhost:8000**
 - Produk terlaris
 
 ### 📦 Produk & Inventori
+<img width="1128" height="522" alt="image" src="https://github.com/user-attachments/assets/17fde820-8892-4989-8c27-5b549d2dfbb3" />
+<img width="1128" height="517" alt="image" src="https://github.com/user-attachments/assets/25db78f9-9b0d-4bc8-8215-98d0d2ec8064" />
+<img width="1128" height="520" alt="image" src="https://github.com/user-attachments/assets/3842252d-d8c9-4cf4-8c40-2fdb496215c9" />
+
+
 - CRUD produk lengkap
 - Kode produk unik
 - Harga beli & jual
@@ -120,6 +127,8 @@ Buka browser: **http://localhost:8000**
 - Log pergerakan inventori otomatis
 
 ### 🛒 POS / Kasir
+<img width="1128" height="515" alt="image" src="https://github.com/user-attachments/assets/4f472d24-c804-4693-863a-97004326a39a" />
+
 - Pilih produk dengan grid interaktif
 - Keranjang belanja real-time
 - Cari & filter produk per kategori
@@ -128,6 +137,9 @@ Buka browser: **http://localhost:8000**
 - Struk digital (dapat dicetak)
 
 ### 📊 Akuntansi (AIS Core)
+<img width="1128" height="518" alt="image" src="https://github.com/user-attachments/assets/ebf3e6b0-5333-4fe1-b31f-3ffe5aed3fd5" />
+<img width="1128" height="556" alt="image" src="https://github.com/user-attachments/assets/b8305004-23dc-4198-b698-329fdb22d2e5" />
+
 - **Bagan Akun (CoA)** — Asset, Kewajiban, Modal, Pendapatan, Beban
 - **Jurnal Umum** — Otomatis dibuat setiap transaksi penjualan & pengeluaran
 - **Buku Besar** — Per akun, dengan filter tanggal
@@ -136,16 +148,14 @@ Buka browser: **http://localhost:8000**
   - Dana → Debit Dana Wallet / Kredit Pendapatan
   - QRIS/Transfer → Debit Bank / Kredit Pendapatan
 
-### 💸 Pengeluaran
-- Catat pengeluaran operasional
-- Jurnal akuntansi otomatis
-- Filter per bulan
-
 ### 📈 Laporan
-- **Laporan Penjualan** — Harian / Bulanan dengan breakdown profit
+<img width="1128" height="556" alt="image" src="https://github.com/user-attachments/assets/e972dc54-856c-4df6-b9b6-1dd8c216d300" />
+<img width="1133" height="510" alt="image" src="https://github.com/user-attachments/assets/b05b3ebb-7bab-44c9-9323-405da009dbab" />
+
 - **Laporan Inventori** — Semua stok, stok rendah, nilai inventori
+- **Laporan Penjualan** — Harian / Bulanan dengan breakdown profit
 - **Laporan Keuangan** — Laba-Rugi bulanan dengan grafik harian
-- Semua laporan bisa **dicetak**
+- - Semua laporan bisa **dicetak**
 
 ---
 
