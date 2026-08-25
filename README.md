@@ -140,7 +140,7 @@ Buka browser: **http://localhost:8000**
 <img width="1128" height="556" alt="image" src="https://github.com/user-attachments/assets/b8305004-23dc-4198-b698-329fdb22d2e5" />
 
 - **Bagan Akun (CoA)** — Asset, Kewajiban, Modal, Pendapatan, Beban
-- **Jurnal Umum** — Otomatis dibuat setiap transaksi penjualan & pengeluaran
+- **Jurnal Umum** — Pencatatan transaksi Operasional non-Penjualan & Pengeluaran
 - **Buku Besar** — Per akun, dengan filter tanggal
 - Jurnal otomatis sesuai metode bayar:
   - Tunai → Debit Kas / Kredit Pendapatan
